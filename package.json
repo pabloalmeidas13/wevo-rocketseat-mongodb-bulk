@@ -1,0 +1,20 @@
+{
+  "name": "mongodb_nodejs_bulk",
+  "version": "1.0.0",
+  "description": "rocket",
+  "main": "startup.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [
+    "test",
+    "nodejs",
+    "mongodb"
+  ],
+  "author": "prado",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongodb": "^3.3.4"
+  }
+}
