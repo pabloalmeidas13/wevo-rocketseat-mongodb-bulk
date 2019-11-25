@@ -6,7 +6,8 @@ exports.insertOneByOne = async (req, res, next) =>
 {
     try 
     {
-        let resp = await service.insertOneByOne(req.body);
+        let myName = req.header('myname');
+        let resp = await service.insertOneByOne(myName, req.body);
 
         res.status(200).send({
             message: resp
@@ -25,7 +26,8 @@ exports.insertMany = async (req, res, next) =>
 {
     try 
     {
-        let resp = await service.insertMany(req.body);
+        let myName = req.header('myname');
+        let resp = await service.insertMany(myName, req.body);
 
         res.status(200).send({
             message: resp
@@ -44,7 +46,8 @@ exports.insertBulk = async (req, res, next) =>
 {
     try 
     {
-        let resp = await service.insertBulk(req.body);
+        let myName = req.header('myname');
+        let resp = await service.insertBulk(myName, req.body);
 
         res.status(200).send({
             message: resp

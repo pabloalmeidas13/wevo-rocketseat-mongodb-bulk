@@ -4,10 +4,21 @@ const router = express.Router();
 
 const controller = require('../controllers/controller');
 
-router.post('/mongoDBInsert', controller.insertOneByOne);
+const headerValidation = (req,res,next) =>{
+    if(!req.header('myname'))
+    {
+        res.status(401).json({E: "Header 'myname' not found!"});
+    }
+    else
+    {
+        next();
+    }
+};
 
-router.post('/mongoDBInsertMany', controller.insertMany);
+router.post('/mongoDBInsert', headerValidation, controller.insertOneByOne);
 
-router.post('/mongoDBInsertBulk', controller.insertBulk);
+router.post('/mongoDBInsertMany', headerValidation, controller.insertMany);
+
+router.post('/mongoDBInsertBulk', headerValidation, controller.insertBulk);
 
 module.exports = router;

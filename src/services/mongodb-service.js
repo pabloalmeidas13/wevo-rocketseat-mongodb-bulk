@@ -1,14 +1,13 @@
 const MongoClient = require('mongodb').MongoClient;
 const config = require('../config/const');
+const dbName = 'rocketseat';
+const collectionName = 'insertion';
+const url = config.mongodbConnectionString;
+const client = new MongoClient(url, { useNewUrlParser : true });
 
 
-exports.insertOneByOne = async (_listToInsertOnMongoDB) =>
+exports.insertOneByOne = async (_identifier, _listToInsertOnMongoDB) =>
 {
-    let url = config.mongodbConnectionString;
-    let dbName = 'teste';
-
-    let client = new MongoClient(url, { useNewUrlParser : true });
-    
     try
     {
         await client.connect();
@@ -20,7 +19,8 @@ exports.insertOneByOne = async (_listToInsertOnMongoDB) =>
         {
             for(let i=0;i<_listToInsertOnMongoDB.length;i++)
             {
-                await db.collection('testeInsercao').insertOne(_listToInsertOnMongoDB[i]);
+                _listToInsertOnMongoDB[i].whois = _identifier;
+                await db.collection(collectionName).insertOne(_listToInsertOnMongoDB[i]);
                 insertedAmount++;
             }
 
@@ -34,13 +34,8 @@ exports.insertOneByOne = async (_listToInsertOnMongoDB) =>
     }
 };
 
-exports.insertMany = async (_listToInsertOnMongoDB) =>
+exports.insertMany = async (_identifier, _listToInsertOnMongoDB) =>
 {
-    let url = config.mongodbConnectionString;
-    let dbName = 'teste';
-
-    let client = new MongoClient(url, { useNewUrlParser : true });
-
     try
     {
         await client.connect();
@@ -50,7 +45,12 @@ exports.insertMany = async (_listToInsertOnMongoDB) =>
         let insertedAmount = 0;
         if(_listToInsertOnMongoDB && Array.isArray(_listToInsertOnMongoDB))
         {
-            let returnable = await db.collection('testeInsercao').insertMany(_listToInsertOnMongoDB);
+            _listToInsertOnMongoDB = _listToInsertOnMongoDB.map(l => {
+                l.whois = _identifier;
+                return l;
+            });
+
+            let returnable = await db.collection(collectionName).insertMany(_listToInsertOnMongoDB);
 
             insertedAmount = returnable.insertedCount;
         }
@@ -64,20 +64,15 @@ exports.insertMany = async (_listToInsertOnMongoDB) =>
     }
 };
 
-exports.insertBulk = async (_listToInsertOnMongoDB) =>
+exports.insertBulk = async (_identifier, _listToInsertOnMongoDB) =>
 {
-    let url = config.mongodbConnectionString;
-    let dbName = 'teste';
-
-    let client = new MongoClient(url, { useNewUrlParser : true });
-
     try
     {
         await client.connect();
 
         let db = client.db(dbName);
 
-        let collection = db.collection('testeInsercao');
+        let collection = db.collection(collectionName);
 
         let bulk = collection.initializeUnorderedBulkOp();
 
@@ -87,6 +82,7 @@ exports.insertBulk = async (_listToInsertOnMongoDB) =>
         {
             for(let i=0;i<_listToInsertOnMongoDB.length;i++)
             {
+                _listToInsertOnMongoDB[i].whois = _identifier;
                 bulk.insert(_listToInsertOnMongoDB[i]);
             }
         }
