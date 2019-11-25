@@ -28,5 +28,3 @@ app.use(function (req, res, next) {
 app.use('/', indexRoute);
 
 module.exports = app;
-
-//Cenário: Aplicação que recebe 100~1000 pedidos por "request" -> fica pior na black friday
